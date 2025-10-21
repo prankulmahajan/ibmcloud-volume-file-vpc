@@ -237,8 +237,14 @@ if [[ "$e2e_rfs_test_case" == "true" ]]; then
 	ginkgo -v -nodes=1 --focus="\[ics-e2e\] \[sc_rfs\]" ./e2e -- -e2e-verify-service-account=false
 	rc4=$?
 	echo "Exit status for RFS Profile volume test: $rc4"
+	
+	if [[ $rc4 -eq 0 ]]; then
+		echo -e "VPC-FILE-CSI-TEST-RFS: VPC-File-RFS-Volume-Tests: PASS" >> $E2E_TEST_RESULT
+	else
+		echo -e "VPC-FILE-CSI-TEST-RFS: VPC-File-RFS-Volume-Tests: FAILED" >> $E2E_TEST_RESULT
+	fi
 else
-	echo -e "VPC-FILE-CSI-TEST: VPC-File-Volume-Tests: SKIP" >> $E2E_TEST_RESULT
+	echo -e "VPC-FILE-CSI-TEST-RFS: VPC-File-Volume-Tests: SKIP" >> $E2E_TEST_RESULT
 fi
 
 if [[ $rc1 -eq 0 && $rc2 -eq 0 ]]; then

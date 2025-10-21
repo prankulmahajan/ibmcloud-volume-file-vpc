@@ -229,7 +229,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 				{
 					PVCName:       "ics-vol-rfs-",
 					VolumeType:    sc,
-					FSType:        "ext4",
+					FSType:        "nfs",
 					ClaimSize:     "15Gi",
 					ReclaimPolicy: &reclaimPolicy,
 					MountOptions:  []string{"rw"},
@@ -254,7 +254,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 
 		fpointer, _ = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE/DELETE WITH DEFAULT BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE/DELETE WITH DEFAULT BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 
 	It("with rfs profile sc : should create a pvc, deployment resources, write and read to volume, delete the pod with max bandwidth ", func() {
@@ -274,7 +274,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 				{
 					PVCName:       "ics-vol-rfs-",
 					VolumeType:    sc,
-					FSType:        "ext4",
+					FSType:        "nfs",
 					ClaimSize:     "15Gi",
 					ReclaimPolicy: &reclaimPolicy,
 					MountOptions:  []string{"rw"},
@@ -299,7 +299,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 
 		fpointer, _ = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE/DELETE WITH MAX BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE/DELETE WITH MAX BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 
 	It("with rfs profile sc: should provide default throughput and should create a pvc, deployment resources, write and read to volume, delete the pod", func() {
@@ -325,7 +325,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 				{
 					PVCName:       "ics-vol-rfs-",
 					VolumeType:    sc,
-					FSType:        "ext4",
+					FSType:        "nfs",
 					ClaimSize:     "15Gi",
 					ReclaimPolicy: &reclaimPolicy,
 					MountOptions:  []string{"rw"},
@@ -350,7 +350,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 
 		fpointer, _ = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE/DELETE WITH ZERO BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE/DELETE WITH ZERO BANDWIDTH FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 
 	It("with rfs profile sc: should fail when bandwidth is set to an invalid high value (9000)", func() {
@@ -382,7 +382,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 		fpointer, _ = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
 
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE FAIL WITH INVALID BANDWIDTH (9000) FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE FAIL WITH INVALID BANDWIDTH (9000) FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 
 	It("with rfs profile sc: should fail when iops is provided for rfs profile", func() {
@@ -412,7 +412,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 		fpointer, err = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
 
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE FAIL WITH IOPS PARAM FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE FAIL WITH IOPS PARAM FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 
 	It("with rfs profile sc: should fail when zone is provided for rfs profile", func() {
@@ -441,7 +441,7 @@ var _ = Describe("[ics-e2e] [sc_rfs] Dynamic Provisioning for RFS SC with Deploy
 
 		fpointer, err = os.OpenFile(testResultFile, os.O_APPEND|os.O_WRONLY, 0644)
 		defer fpointer.Close()
-		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST: VERIFYING PVC CREATE FAIL WITH ZONE PARAM FOR %s STORAGE CLASS : PASS\n", sc))
+		_, _ = fpointer.WriteString(fmt.Sprintf("VPC-FILE-CSI-TEST-RFS: VERIFYING PVC CREATE FAIL WITH ZONE PARAM FOR %s STORAGE CLASS : PASS\n", sc))
 	})
 })
 
