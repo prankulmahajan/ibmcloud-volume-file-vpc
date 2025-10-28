@@ -41,14 +41,7 @@ func (vs *FileShareService) CreateFileShare(shareTemplate *models.Share, ctxLogg
 
 	var share models.Share
 	var apiErr models.Error
-	var request *client.Request
-
-	//Revert this code once RFS is LA/GA from VPC IAAS side
-	if shareTemplate.Profile != nil && shareTemplate.Profile.Name == RFSProfile {
-		request = vs.client.WithQueryValue("maturity", "beta").NewRequest(operation)
-	} else {
-		request = vs.client.NewRequest(operation)
-	}
+	request := vs.client.NewRequest(operation)
 
 	ctxLogger.Info("Equivalent curl command and payload details", zap.Reflect("URL", request.URL()), zap.Reflect("Payload", shareTemplate), zap.Reflect("Operation", operation))
 
