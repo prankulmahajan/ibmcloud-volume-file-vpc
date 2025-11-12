@@ -115,6 +115,19 @@ func (vpcs *VPCSession) CreateVolume(volumeRequest provider.Volume) (volumeRespo
 		shareTemplate.EncryptionKey = &models.EncryptionKey{CRN: encryptionKeyCRN}
 	}
 
+	// adding snapshot CRN and ID in the request, if it is provided to create the volume from snapshot
+	if len(volumeRequest.SnapshotCRN) > 0 {
+		shareTemplate.SourceSnapshot = &models.Snapshot{CRN: volumeRequest.SnapshotCRN}
+	} else if len(volumeRequest.SnapshotID) > 0 {
+		shareTemplate.SourceSnapshot = &models.Snapshot{ID: volumeRequest.SnapshotID}
+	}
+
+	// We dont need zone and AccessControlMode if sourceSnapshot is present
+	if shareTemplate.SourceSnapshot != nil {
+		shareTemplate.Zone = nil
+		shareTemplate.AccessControlMode = ""
+	}
+
 	vpcs.Logger.Info("Calling VPC provider for volume creation...")
 	var volume *models.Share
 

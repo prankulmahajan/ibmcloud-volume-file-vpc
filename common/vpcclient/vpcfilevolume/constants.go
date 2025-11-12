@@ -33,4 +33,7 @@ const (
 	profileName        = "profile-name"
 	shareProfiles      = Version + "/share/profiles"
 	shareProfileName   = shareProfiles + "/{" + profileName + "}"
+	snapshotsPath      = shareIDPath + "/snapshots"
+	snapshotIDParam    = "snapshot-id"
+	snapshotIDPath     = snapshotsPath + "/{" + snapshotIDParam + "}"
 )

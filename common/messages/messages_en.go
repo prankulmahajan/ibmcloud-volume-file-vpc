@@ -25,7 +25,7 @@ import (
 var messagesEn = map[string]util.Message{
 	"ErrorRequiredFieldMissing": {
 		Code:        "ErrorRequiredFieldMissing",
-		Description: "[%s] is required to complete the operation.",
+		Description: "[%s] is required to complete the operation",
 		Type:        util.InvalidRequest,
 		RC:          400,
 		Action:      "Review the error that is returned. Provide the missing information in your request and try again.",
@@ -210,6 +210,55 @@ var messagesEn = map[string]util.Message{
 		Description: "The file share ID '%s' could not be deleted from your VPC. File share has mount targets which needs to deleted. Please go through the list of VPCs = '%v'",
 		Type:        util.DeletionFailed,
 		Action:      "User need to review all mount targets and delete them first before deleting file share. Run `ibmcloud is share-targets <SHARE_ID>` to get the mount target for the file share. ",
+	},
+	"SnapshotCreationFailed": {
+		Code:        "SnapshotCreationFailed",
+		Description: "Snapshot creation failed for the given share ID",
+		Type:        util.ProvisioningFailed,
+		RC:          500,
+		Action:      "Please check backend error for more details",
+	},
+	"ListSnapshotsFailed": {
+		Code:        "ListSnapshotsFailed",
+		Description: "Unable to fetch list of snapshots for share ID '%s'",
+		Type:        util.RetrivalFailed,
+		RC:          404,
+		Action:      "Run 'ibmcloud is share-snapshots --share <share-id>' to list available snapshots in your account.Please check backend error for more details.",
+	},
+	"InvalidListSnapshotLimit": {
+		Code:        "InvalidListSnapshotLimit",
+		Description: "The value '%v' specified in the limit parameter of the list snapshot call is not valid.",
+		Type:        util.InvalidRequest,
+		RC:          400,
+		Action:      "Verify the limit parameter's value. The limit must be a positive number between 0 and 100.",
+	},
+	"StartSnapshotIDNotFound": {
+		Code:        "StartSnapshotIDNotFound",
+		Description: "The snapshot ID '%s' specified in the start parameter of the list volume call could not be found.",
+		Type:        util.InvalidRequest,
+		RC:          400,
+		Action:      "Please verify that the start snapshot ID is correct and whether you have access to the snapshot ID.ibmcloud is share-snapshot <share-id> <snapshot-id>",
+	},
+	"FailedToDeleteSnapshot": {
+		Code:        "FailedToDeleteSnapshot",
+		Description: "Failed to delete '%s' snapshot ID from share ID '%s'",
+		Type:        util.DeletionFailed,
+		RC:          500,
+		Action:      "Check whether the snapshot ID exists. You may need to verify by using 'ibmcloud is share-snapshot <share-id> <snapshot-id>' cli",
+	},
+	"FailedToFindSnapshot": {
+		Code:        "FailedToFindSnapshot",
+		Description: "A snapshot with the specified snapshot ID '%s' and share ID '%s' could not be found.",
+		Type:        util.RetrivalFailed,
+		RC:          404,
+		Action:      "Please check the snapshot ID once, You many need to verify by using 'ibmcloud is share-snapshot <share-id> <snapshot-id>' cli. Please check backend error for more details",
+	},
+	"StorageFindFailedWithSnapshotName": {
+		Code:        "StorageFindFailedWithSnapshotName",
+		Description: "A snapshot with the specified snapshot name '%s' and share ID '%s' could not be found.",
+		Type:        util.RetrivalFailed,
+		RC:          404,
+		Action:      "Please check the snapshot name once, You many need to verify by using 'ibmcloud is share-snapshots --share <share-id>' cli.",
 	},
 }
 

@@ -45,6 +45,8 @@ const (
 	SecurityGroup        = "security_group"
 	EncryptionTrasitMode = "user_managed"
 	pageSize             = 50
+	SnapshotNotFound     = "shares_snapshot_not_found"
+	SharesNotFound       = "shares_not_found"
 )
 
 var volumeIDPartsCount = 5
@@ -59,7 +61,7 @@ var skipErrorCodes = map[string]bool{
 	"shares_bad_request":                        true,
 	"shares_resource_group_bad_request":         true,
 	"shares_vpc_not_found":                      true,
-	"shares_not_found":                          true,
+	SharesNotFound:                              true,
 	"shares_target_not_found":                   true,
 	"shares_target_one_per_vpc":                 true,
 	"bad_field":                                 true,
@@ -75,6 +77,10 @@ var skipErrorCodes = map[string]bool{
 	"shares_subnet_not_found":                   true,
 	"targets_subnet_all_addresses_taken":        true,
 	"InvalidArgument":                           true,
+	SnapshotNotFound:                            true,
+	"share_snapshot_rate_too_high":              true,
+	"share_snapshot_name_duplicate":             true,
+	"share_snapshots_quota_limit_exceeded":      true,
 	"shares_status_pending":                     false,
 	"internal_error":                            false,
 	"invalid_route":                             true,
@@ -311,6 +317,10 @@ func FromProviderToLibVolume(vpcVolume *models.Share, logger *zap.Logger) (libVo
 		CreationTime: createdDate,
 	}
 
+	if vpcVolume.SourceSnapshot != nil {
+		libVolume.SnapshotID = vpcVolume.SourceSnapshot.ID
+	}
+
 	// Zone can be nil for some profiles (e.g., RFS)
 	if vpcVolume.Zone != nil {
 		libVolume.Az = vpcVolume.Zone.Name
@@ -394,6 +404,38 @@ func FromProviderToLibVolumeAccessPoint(vpcShareTarget *models.ShareTarget, logg
 	return
 }
 
+// FromProviderToLibSnapshot converting vpc provider snapshot type to generic lib snapshot type
+func FromProviderToLibSnapshot(sourceVolumeID string, vpcSnapshot *models.Snapshot, logger *zap.Logger) (libSnapshot *provider.Snapshot) {
+	logger.Debug("Entry of FromProviderToLibSnapshot method...")
+	defer logger.Debug("Exit from FromProviderToLibSnapshot method...")
+
+	if vpcSnapshot == nil {
+		logger.Info("Snapshot details are empty")
+		return
+	}
+
+	logger.Debug("Snapshot details of VPC client", zap.Reflect("models.Snapshot", vpcSnapshot))
+
+	var createdTime time.Time
+	if vpcSnapshot.CreatedAt != nil {
+		createdTime = *vpcSnapshot.CreatedAt
+	}
+	libSnapshot = &provider.Snapshot{
+		VolumeID:             sourceVolumeID,
+		SnapshotID:           vpcSnapshot.ID,
+		SnapshotCRN:          vpcSnapshot.CRN,
+		SnapshotCreationTime: createdTime,
+		SnapshotSize:         GiBToBytes(vpcSnapshot.MinimumSize),
+		VPC:                  provider.VPC{Href: vpcSnapshot.Href},
+	}
+	if vpcSnapshot.LifecycleState == snapshotReadyState {
+		libSnapshot.ReadyToUse = true
+	} else {
+		libSnapshot.ReadyToUse = false
+	}
+	return
+}
+
 // IsValidVolumeIDFormat validating(gc has 5 parts and NG has 6 parts)
 func IsValidVolumeIDFormat(volID string) bool {
 	parts := strings.Split(volID, "-")
@@ -413,6 +455,11 @@ func SetRetryParameters(maxAttempts int, maxGap int) {
 
 func roundUpSize(volumeSizeBytes int64, allocationUnitBytes int64) int64 {
 	return (volumeSizeBytes + allocationUnitBytes - 1) / allocationUnitBytes
+}
+
+// GiBToBytes converts GiB to Bytes
+func GiBToBytes(volumeSizeGiB int64) int64 {
+	return volumeSizeGiB * GiB
 }
 
 // SkipRetryForIKS skip retry as per listed error codes

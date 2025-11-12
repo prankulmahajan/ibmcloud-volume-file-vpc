@@ -35,6 +35,7 @@ type RegionalAPI interface {
 	Login(token string) error
 
 	FileShareService() vpcfilevolume.FileShareManager
+	SnapshotService() vpcfilevolume.SnapshotManager
 }
 
 var _ RegionalAPI = &Session{}
@@ -92,6 +93,11 @@ func (s *Session) Login(token string) error {
 // VolumeFileService returns the Volume service for managing file volumes
 func (s *Session) FileShareService() vpcfilevolume.FileShareManager {
 	return vpcfilevolume.New(s.client)
+}
+
+// SnapshotService returns the Snapshot service for managing snapshot
+func (s *Session) SnapshotService() vpcfilevolume.SnapshotManager {
+	return vpcfilevolume.NewSnapshotManager(s.client)
 }
 
 // RegionalAPIClientProvider declares an interface for a provider that can supply a new

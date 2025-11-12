@@ -23,19 +23,20 @@ import (
 
 // Share ...
 type Share struct {
-	CRN           string         `json:"crn,omitempty"`
-	Href          string         `json:"href,omitempty"`
-	ID            string         `json:"id,omitempty"`
-	Name          string         `json:"name,omitempty"`
-	Size          int64          `json:"size,omitempty"`
-	Iops          int64          `json:"iops,omitempty"`
-	EncryptionKey *EncryptionKey `json:"encryption_key,omitempty"`
-	Bandwidth     int32          `json:"bandwidth,omitempty"`
-	ResourceGroup *ResourceGroup `json:"resource_group,omitempty"`
-	InitialOwner  *InitialOwner  `json:"initial_owner,omitempty"`
-	Profile       *Profile       `json:"profile,omitempty"`
-	CreatedAt     *time.Time     `json:"created_at,omitempty"`
-	UserTags      []string       `json:"user_tags,omitempty"`
+	CRN            string         `json:"crn,omitempty"`
+	Href           string         `json:"href,omitempty"`
+	ID             string         `json:"id,omitempty"`
+	Name           string         `json:"name,omitempty"`
+	Size           int64          `json:"size,omitempty"`
+	Iops           int64          `json:"iops,omitempty"`
+	EncryptionKey  *EncryptionKey `json:"encryption_key,omitempty"`
+	Bandwidth      int32          `json:"bandwidth,omitempty"`
+	ResourceGroup  *ResourceGroup `json:"resource_group,omitempty"`
+	InitialOwner   *InitialOwner  `json:"initial_owner,omitempty"`
+	Profile        *Profile       `json:"profile,omitempty"`
+	SourceSnapshot *Snapshot      `json:"source_snapshot,omitempty"`
+	CreatedAt      *time.Time     `json:"created_at,omitempty"`
+	UserTags       []string       `json:"user_tags,omitempty"`
 	// Status of share named - deleted, deleting, failed, pending, stable, updating, waiting, suspended
 	Status            StatusType     `json:"lifecycle_state,omitempty"`
 	ShareTargets      *[]ShareTarget `json:"mount_targets,omitempty"`

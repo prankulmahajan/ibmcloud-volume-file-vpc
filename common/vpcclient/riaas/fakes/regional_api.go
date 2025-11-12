@@ -30,6 +30,16 @@ type RegionalAPI struct {
 	loginReturnsOnCall map[int]struct {
 		result1 error
 	}
+	SnapshotServiceStub        func() vpcfilevolume.SnapshotManager
+	snapshotServiceMutex       sync.RWMutex
+	snapshotServiceArgsForCall []struct {
+	}
+	snapshotServiceReturns struct {
+		result1 vpcfilevolume.SnapshotManager
+	}
+	snapshotServiceReturnsOnCall map[int]struct {
+		result1 vpcfilevolume.SnapshotManager
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
@@ -148,6 +158,59 @@ func (fake *RegionalAPI) LoginReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *RegionalAPI) SnapshotService() vpcfilevolume.SnapshotManager {
+	fake.snapshotServiceMutex.Lock()
+	ret, specificReturn := fake.snapshotServiceReturnsOnCall[len(fake.snapshotServiceArgsForCall)]
+	fake.snapshotServiceArgsForCall = append(fake.snapshotServiceArgsForCall, struct {
+	}{})
+	stub := fake.SnapshotServiceStub
+	fakeReturns := fake.snapshotServiceReturns
+	fake.recordInvocation("SnapshotService", []interface{}{})
+	fake.snapshotServiceMutex.Unlock()
+	if stub != nil {
+		return stub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *RegionalAPI) SnapshotServiceCallCount() int {
+	fake.snapshotServiceMutex.RLock()
+	defer fake.snapshotServiceMutex.RUnlock()
+	return len(fake.snapshotServiceArgsForCall)
+}
+
+func (fake *RegionalAPI) SnapshotServiceCalls(stub func() vpcfilevolume.SnapshotManager) {
+	fake.snapshotServiceMutex.Lock()
+	defer fake.snapshotServiceMutex.Unlock()
+	fake.SnapshotServiceStub = stub
+}
+
+func (fake *RegionalAPI) SnapshotServiceReturns(result1 vpcfilevolume.SnapshotManager) {
+	fake.snapshotServiceMutex.Lock()
+	defer fake.snapshotServiceMutex.Unlock()
+	fake.SnapshotServiceStub = nil
+	fake.snapshotServiceReturns = struct {
+		result1 vpcfilevolume.SnapshotManager
+	}{result1}
+}
+
+func (fake *RegionalAPI) SnapshotServiceReturnsOnCall(i int, result1 vpcfilevolume.SnapshotManager) {
+	fake.snapshotServiceMutex.Lock()
+	defer fake.snapshotServiceMutex.Unlock()
+	fake.SnapshotServiceStub = nil
+	if fake.snapshotServiceReturnsOnCall == nil {
+		fake.snapshotServiceReturnsOnCall = make(map[int]struct {
+			result1 vpcfilevolume.SnapshotManager
+		})
+	}
+	fake.snapshotServiceReturnsOnCall[i] = struct {
+		result1 vpcfilevolume.SnapshotManager
+	}{result1}
+}
+
 func (fake *RegionalAPI) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -155,6 +218,8 @@ func (fake *RegionalAPI) Invocations() map[string][][]interface{} {
 	defer fake.fileShareServiceMutex.RUnlock()
 	fake.loginMutex.RLock()
 	defer fake.loginMutex.RUnlock()
+	fake.snapshotServiceMutex.RLock()
+	defer fake.snapshotServiceMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
